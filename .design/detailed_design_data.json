@@ -1,0 +1,196 @@
+{
+  "class_design": {
+    "class_diagram": [
+      "@startuml",
+      "",
+      "",
+      "class TempModule {",
+      "  + run(): str",
+      "  + check_debug_value(expected_value: str): bool",
+      "}",
+      "",
+      "class TempModule2 {",
+      "  + run(): str",
+      "  + check_test_value(expected_value: str): bool",
+      "}",
+      "@enduml"
+    ],
+    "files": {
+      "SRC/temp_module.py": [
+        {
+          "class_id": "TempModule",
+          "class_name": "TempModule",
+          "class_detailed_design": {
+            "class_name": "TempModule",
+            "class_description": "デバッグ用の固定文字列を返却し、またその値が期待値と一致するかを検証する責務を持つクラス。例外発生時はメインアプリケーション層内で完結して処理する。",
+            "field_details": [],
+            "method_details": [
+              {
+                "id": "run",
+                "name": "run(self)",
+                "access_modifier": null,
+                "other_modifiers": [],
+                "params": [],
+                "returns": "デバッグ用の固定文字列（例: 'DEBUG_STRING'）を返す。",
+                "return_type": "str",
+                "overview": "デバッグ用の固定文字列を返却する。",
+                "description": "このメソッドの流れは以下になります。\n1. 固定文字列 'DEBUG_STRING' を返す。",
+                "exceptions": {},
+                "dependencies": [],
+                "api_path": ""
+              },
+              {
+                "id": "check_debug_value",
+                "name": "check_debug_value(self, expected_value: str)",
+                "access_modifier": null,
+                "other_modifiers": [],
+                "params": [
+                  {
+                    "name": "expected_value",
+                    "modifiers": [],
+                    "type": "str",
+                    "description": "検証対象となる期待値の文字列。",
+                    "default": null
+                  }
+                ],
+                "returns": "デバッグ用固定文字列が期待値と一致する場合はTrue、一致しない場合はFalse。",
+                "return_type": "bool",
+                "overview": "デバッグ用固定文字列が期待値と一致するかを検証する。",
+                "description": "このメソッドの流れは以下になります。\n1. run() メソッドでデバッグ用固定文字列を取得する。\n2. 取得した文字列と expected_value を比較する。\n3. 一致すれば True を返す。\n4. 一致しなければ False を返す。",
+                "exceptions": {
+                  "ValueMismatchException": "デバッグ用固定文字列が期待値と一致しない場合。"
+                },
+                "dependencies": [],
+                "api_path": ""
+              }
+            ]
+          }
+        }
+      ],
+      "SRC/temp_module2.py": [
+        {
+          "class_id": "TempModule2",
+          "class_name": "TempModule2",
+          "class_detailed_design": {
+            "class_name": "TempModule2",
+            "class_description": "テスト用の固定文字列を返却し、指定された期待値と一致するかを検証する責務を持つクラス。例外発生時はメインアプリケーション層内で完結して処理する。",
+            "field_details": [],
+            "method_details": [
+              {
+                "id": "run",
+                "name": "run(self)",
+                "access_modifier": "public",
+                "other_modifiers": [],
+                "params": [],
+                "returns": "テスト用の固定文字列（例: 'test_value'）を返す。",
+                "return_type": "str",
+                "overview": "テスト用の固定文字列を返却するメソッド。",
+                "description": "このメソッドの流れは以下になります。\n1. テスト用の固定文字列 'test_value' を返却する。",
+                "exceptions": {},
+                "dependencies": [],
+                "api_path": ""
+              },
+              {
+                "id": "check_test_value",
+                "name": "check_test_value(self, expected_value: str)",
+                "access_modifier": "public",
+                "other_modifiers": [],
+                "params": [
+                  {
+                    "name": "expected_value",
+                    "modifiers": [],
+                    "type": "str",
+                    "description": "検証対象となる期待値の文字列。",
+                    "default": null
+                  }
+                ],
+                "returns": "一致する場合はTrue、一致しない場合はFalse。",
+                "return_type": "bool",
+                "overview": "テスト用の固定文字列が期待値と一致するかを検証するメソッド。一致しない場合はValueMismatchExceptionを捕捉し、Falseを返す。",
+                "description": "このメソッドの流れは以下になります。\n1. run() を呼び出してテスト用の固定文字列を取得する。\n2. 取得した文字列と expected_value を比較する。\n3. 一致すれば True を返す。\n4. 一致しなければ ValueMismatchException を発生させ、except 節で捕捉して False を返す。",
+                "exceptions": {
+                  "ValueMismatchException": "テスト用の固定文字列と expected_value が一致しない場合に発生。"
+                },
+                "dependencies": [],
+                "api_path": ""
+              }
+            ]
+          }
+        }
+      ],
+      "SRC/exceptions/value_mismatch_exception.py": [
+        {
+          "class_id": "ValueMismatchException",
+          "class_name": "ValueMismatchException",
+          "class_detailed_design": {
+            "class_name": "ValueMismatchException",
+            "class_description": "返却された文字列が期待値と一致しません: {actual_value}",
+            "field_details": [
+              {
+                "name": "error_code",
+                "access_modifier": null,
+                "other_modifiers": [],
+                "type": "str",
+                "description": "Error code: TEMP_001",
+                "default": null
+              },
+              {
+                "name": "message",
+                "access_modifier": null,
+                "other_modifiers": [],
+                "type": "str",
+                "description": "返却された文字列が期待値と一致しません: {actual_value}",
+                "default": null
+              }
+            ],
+            "method_details": []
+          }
+        }
+      ]
+    }
+  },
+  "method_design": {
+    "files": {
+      "SRC/main.py": [
+        {
+          "method_id": "main()",
+          "method_name": "main()",
+          "method_detail": {
+            "description": "アプリケーションのエントリーポイントとして各モジュールのrunメソッドを呼び出し、結果を出力する。\nこのメソッドの流れは以下になります。\n1. TempModuleのインスタンスを生成する。\n2. TempModule2のインスタンスを生成する。\n3. TempModuleのrun()を呼び出し、デバッグ用文字列を取得する。\n4. TempModule2のrun()を呼び出し、テスト用文字列を取得する。\n5. 取得したデバッグ用文字列とテスト用文字列を標準出力に表示する。\n6. 例外発生時はエラーメッセージを標準出力に表示し、処理を終了する。",
+            "access_modifier": null,
+            "other_modifiers": [],
+            "params": [],
+            "return_type": "None",
+            "returns": null,
+            "exceptions": {},
+            "api_path": null,
+            "params_example": "",
+            "return_example": ""
+          }
+        }
+      ]
+    }
+  },
+  "interface_design": {
+    "endpoints": []
+  },
+  "folder_structure": {
+    "summaries": {
+      "SRC": "メインアプリケーション層として機能するディレクトリ。各Pythonファイルが独立したユーティリティモジュールとして配置され、シンプルかつ保守性の高い構成を実現する。外部依存を排除し、標準Pythonのみで要件を満たす設計となっている。",
+      "SRC/exceptions": "アプリケーション内で発生する例外を管理するためのディレクトリ。例外クラスを集約し、エラー処理の一元化と保守性向上を目的としている。"
+    },
+    "folder_structure": [
+      "```plaintext",
+      ".",
+      "├── - 例: SRC/",
+      "├── - 配置場所: SRC/",
+      "└── SRC/",
+      "    ├── main.py",
+      "    ├── temp_module.py",
+      "    ├── temp_module2.py",
+      "    └── exceptions/",
+      "        └── value_mismatch_exception.py",
+      "```"
+    ]
+  }
+}
