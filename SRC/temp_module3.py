@@ -1,3 +1,3 @@
-class TempModule2:
+class TempModule3:
     def run(self):
         return "temp for mock test"
