@@ -1,0 +1,157 @@
+{
+  "class_design": {
+    "class_diagram": [
+      "@startuml",
+      "",
+      "",
+      "class TempModule {",
+      "  - temp_module2: TempModule2",
+      "  + run(): str",
+      "  + get_fixed_string(): str",
+      "}",
+      "TempModule --> TempModule2",
+      "",
+      "class TempModule2 {",
+      "  + run(): str",
+      "  + get_debug_string(): str",
+      "}",
+      "@enduml"
+    ],
+    "files": {
+      "SRC/temp_module.py": [
+        {
+          "class_id": "TempModule",
+          "class_name": "TempModule",
+          "class_detailed_design": {
+            "class_name": "TempModule",
+            "class_description": "ユーザー要求に応じて固定文字列を返却する責務を持つ。TempModule2に依存し、run()メソッドでTempModule2の結果を組み合わせて返却する。SRCディレクトリ直下に単一クラスとして実装される。",
+            "field_details": [
+              {
+                "name": "temp_module2",
+                "access_modifier": null,
+                "other_modifiers": [],
+                "type": "TempModule2",
+                "description": "TempModule2クラスのインスタンス。TempModuleのrun()メソッド内でTempModule2のrun()メソッドを呼び出し、結果を利用する。",
+                "default": null
+              }
+            ],
+            "method_details": [
+              {
+                "id": "run",
+                "name": "run(self)",
+                "access_modifier": null,
+                "other_modifiers": [],
+                "params": [],
+                "returns": "TempModule2の実行結果とTempModuleの固定文字列を連結した文字列。例: 'TempModule2実行結果 | TempModule固定文字列'",
+                "return_type": "str",
+                "overview": "TempModuleのエントリーポイント。TempModule2のrun()メソッドを呼び出し、その結果と自身の固定文字列を組み合わせて返却する。",
+                "description": "このメソッドの流れは以下になります。\n1. TempModule2のrun()メソッドを呼び出し、TempModule2の固定文字列を取得する。\n2. 自身のget_fixed_string()メソッドを呼び出し、TempModuleの固定文字列を取得する。\n3. TempModule2の結果とTempModuleの固定文字列を連結し、返却する。",
+                "exceptions": {
+                  "Exception": "TempModule2のrun()メソッド呼び出し時に例外が発生した場合、そのまま伝播させる。"
+                },
+                "dependencies": [],
+                "api_path": ""
+              },
+              {
+                "id": "get_fixed_string",
+                "name": "get_fixed_string(self)",
+                "access_modifier": null,
+                "other_modifiers": [],
+                "params": [],
+                "returns": "TempModuleの固定文字列。例: 'TempModule固定文字列'",
+                "return_type": "str",
+                "overview": "TempModuleの固定文字列を返却するメソッド。",
+                "description": "このメソッドの流れは以下になります。\n1. 所定の固定文字列（例: 'TempModule固定文字列'）を生成する。\n2. 生成した文字列を返却する。",
+                "exceptions": {},
+                "dependencies": [],
+                "api_path": ""
+              }
+            ]
+          }
+        }
+      ],
+      "SRC/temp_module2.py": [
+        {
+          "class_id": "TempModule2",
+          "class_name": "TempModule2",
+          "class_detailed_design": {
+            "class_name": "TempModule2",
+            "class_description": "TempModule2は、ユーザー要求に応じて固定文字列やデバッグ用文字列を返却する責務を持つ。モノリシックアーキテクチャのルールに従い、外部依存や永続化処理を行わず、SRCディレクトリ直下に単一クラスとして実装される。",
+            "field_details": [],
+            "method_details": [
+              {
+                "id": "run",
+                "name": "run(self)",
+                "access_modifier": "public",
+                "other_modifiers": [],
+                "params": [],
+                "returns": "TempModule2の実行結果を示す固定文字列。例: 'TempModule2実行結果'",
+                "return_type": "str",
+                "overview": "ユーザー要求に応じてTempModule2の固定文字列を返却するエントリーポイントメソッド。",
+                "description": "このメソッドの流れは以下になります。\n1. 所定の固定文字列（例: 'TempModule2実行結果'）を生成する。\n2. 生成した文字列を返却する。",
+                "exceptions": {},
+                "dependencies": [],
+                "api_path": ""
+              },
+              {
+                "id": "get_debug_string",
+                "name": "get_debug_string(self)",
+                "access_modifier": "public",
+                "other_modifiers": [],
+                "params": [],
+                "returns": "TempModule2のデバッグ情報を示す固定文字列。例: 'TempModule2デバッグ情報'",
+                "return_type": "str",
+                "overview": "TempModule2のデバッグ用文字列を返却するメソッド。",
+                "description": "このメソッドの流れは以下になります。\n1. デバッグ用の固定文字列（例: 'TempModule2デバッグ情報'）を生成する。\n2. 生成したデバッグ文字列を返却する。",
+                "exceptions": {},
+                "dependencies": [],
+                "api_path": ""
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "method_design": {
+    "files": {
+      "SRC/main.py": [
+        {
+          "method_id": "main()",
+          "method_name": "main()",
+          "method_detail": {
+            "description": "TempModuleとTempModule2のインスタンスを生成し、TempModuleのrun()メソッドを実行して結果を標準出力に表示する。\nこのメソッドの流れは以下になります。\n1. TempModule2のインスタンスを生成する。\n2. TempModuleのインスタンスを生成し、TempModule2のインスタンスを依存として渡す。\n3. TempModuleのrun()メソッドを呼び出し、結果文字列を取得する。\n4. 取得した結果文字列を標準出力に表示する。",
+            "access_modifier": null,
+            "other_modifiers": [],
+            "params": [],
+            "return_type": "None",
+            "returns": null,
+            "exceptions": {},
+            "api_path": null,
+            "params_example": "",
+            "return_example": ""
+          }
+        }
+      ]
+    }
+  },
+  "interface_design": {
+    "endpoints": []
+  },
+  "folder_structure": {
+    "summaries": {
+      "SRC": "ソースコードを格納する主要ディレクトリ。各Pythonファイルが独立したクラスを提供し、モノリシックかつシンプルな構成で機能を実装する。"
+    },
+    "folder_structure": [
+      "```plaintext",
+      ".",
+      "├── - 例: SRC/",
+      "├── - 配置場所: SRC/",
+      "└── SRC/",
+      "    ├── main.py",
+      "    ├── temp_module.py",
+      "    └── temp_module2.py",
+      "```"
+    ]
+  }
+}
