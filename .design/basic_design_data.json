@@ -1,0 +1,604 @@
+{
+  "architecture_design": {
+    "architecture_pattern": {
+      "pattern": "モノリシック構成",
+      "reason": [
+        {
+          "category": "機能要件に基づく理由",
+          "reason": "要件はSRC/配下に2つの独立したPythonファイルを作成し、それぞれに単一クラスと単一メソッドを実装するだけであり、複雑な構造や分割は不要であるため。"
+        },
+        {
+          "category": "非機能要件に基づく理由",
+          "reason": "小規模かつ単純なユーティリティモジュールであり、拡張性やスケーラビリティよりもシンプルさと保守性が重視されるため。"
+        },
+        {
+          "category": "運用と保守の観点",
+          "reason": "ファイル単位で管理でき、構成が明確で保守や運用が容易であるため。"
+        }
+      ],
+      "scope": [
+        {
+          "approach": "SRC/ディレクトリ直下に2つのPythonファイル（temp_module.py, temp_module_2.py）を配置し、それぞれにTempModuleクラスとrunメソッドのみを実装する。",
+          "purpose": "要件通りの機能を最もシンプルに実現し、余計な抽象化やレイヤーを導入せず、保守性と明瞭性を確保する。"
+        }
+      ]
+    },
+    "layer_structure": [
+      {
+        "name": "メインアプリケーション層",
+        "role": "SRC/配下の各Pythonファイルが直接クラスとメソッドを提供し、要件通りの機能を実装する。",
+        "trait": "レイヤー分割や抽象化は行わず、ファイル単位でクラスとメソッドを定義するシンプルな構成。"
+      }
+    ],
+    "technology_stack": {
+      "selection_criteria": [
+        {
+          "performance_requirement": "Pythonの標準機能のみを使用し、余計な処理や外部依存を排除することで、即時実行可能な軽量構成とする。",
+          "availability": "ファイル単位で管理されるため、障害時も個別に修正・復旧が容易。",
+          "scalability": "小規模ユーティリティのため、スケーラビリティは不要。必要に応じてファイル追加のみで拡張可能。",
+          "security": "外部依存やインターフェースがないため、セキュリティリスクは最小限。",
+          "operations_maintenance": "構成が単純で、ファイル単位で保守・運用が容易。",
+          "development_efficiency": "Pythonのシンプルな構文と標準機能のみを利用することで、開発効率が高い。"
+        }
+      ],
+      "recommended_stack": [
+        {
+          "layer": "メインアプリケーション層",
+          "technology": "Python",
+          "technology_reason": "要件で指定された言語であり、シンプルなクラスとメソッド定義のみで要件を満たせる。外部ライブラリやフレームワークは不要。",
+          "supporting_technology": "なし",
+          "supporting_technology_reason": "要件で外部依存や追加技術の導入は禁止されているため。"
+        }
+      ]
+    },
+    "non_functional_requirements": [
+      {
+        "category": "性能・スケーラビリティ",
+        "objective": "即時実行可能な軽量構成とし、不要な処理や依存を排除する。",
+        "priority": "Critical",
+        "implementation_policy": "Python標準機能のみを用い、ファイル単位でシンプルに実装する。",
+        "measurement": "ファイル実行時のレスポンス速度、外部依存の有無。"
+      },
+      {
+        "category": "可用性・信頼性",
+        "objective": "各モジュールが独立して動作し、障害時も個別に修正・復旧可能とする。",
+        "priority": "High",
+        "implementation_policy": "SRC/配下の各ファイルが独立しているため、障害時も影響範囲が限定される。",
+        "measurement": "各ファイルの独立性、障害発生時の復旧容易性。"
+      },
+      {
+        "category": "保守性・運用性",
+        "objective": "構成を明瞭にし、保守や運用を容易にする。",
+        "priority": "High",
+        "implementation_policy": "ファイル単位で管理し、複雑な構造や抽象化を排除する。",
+        "measurement": "ファイル数、構成の明瞭性、保守作業の容易さ。"
+      },
+      {
+        "category": "移植性",
+        "objective": "他環境でも容易に実行可能とする。",
+        "priority": "Medium",
+        "implementation_policy": "Python標準機能のみを使用し、外部依存を排除する。",
+        "measurement": "他環境での実行可否、依存関係の有無。"
+      },
+      {
+        "category": "セキュリティ",
+        "objective": "外部依存やインターフェースを排除し、セキュリティリスクを最小化する。",
+        "priority": "Medium",
+        "implementation_policy": "外部ライブラリやネットワーク通信を一切使用しない。",
+        "measurement": "外部依存の有無、セキュリティリスクの低減。"
+      },
+      {
+        "category": "法令・規制遵守",
+        "objective": "法令や規制に抵触しないシンプルな構成とする。",
+        "priority": "Low",
+        "implementation_policy": "標準Pythonのみを使用し、外部サービスやライセンス問題を排除する。",
+        "measurement": "ライセンスチェック、外部サービス利用の有無。"
+      }
+    ]
+  },
+  "system_configuration": {
+    "diagram": [
+      "@startuml",
+      "' Internal Components: colored light blue",
+      "rectangle \"MainSourcePackage\" as main_source_package #LightBlue {",
+      "  rectangle \"SRC/temp_module.py\" as temp_module_py #White",
+      "  rectangle \"SRC/temp_module_2.py\" as temp_module_2_py #White",
+      "}",
+      "' No external components",
+      "@enduml"
+    ],
+    "components": {
+      "MainSourcePackage": {
+        "component_name": "MainSourcePackage",
+        "role": "2つの独立したPythonモジュール（temp_module.pyとtemp_module_2.py）をSRCディレクトリ内に提供し、それぞれ指定されたクラスとメソッドを実装する役割を担います。",
+        "software_specification": "Python 3.x",
+        "relationship": "SRCディレクトリ内のtemp_module.pyとtemp_module_2.pyを含み、他の外部コンポーネントや依存関係はありません。",
+        "notes": "追加のインフラや外部連携は不要で、要件通りにファイルとクラスを実装するだけです。"
+      }
+    }
+  },
+  "use_case_diagram": {
+    "actors": {
+      "human_actors": [],
+      "external_system_actors": []
+    },
+    "main_usecases": [
+      {
+        "name": "テスト用文字列を返すモジュールを利用する",
+        "references": [
+          "利用者はテスト用途の処理結果として所定の文字列を取得したい。",
+          "システムはテスト用モジュールの実行により、定められた固定文字列を返す。"
+        ],
+        "description": "利用者はテスト用モジュールを利用し、実行結果として所定の固定文字列を取得する。システムはテスト用機能を実行し、期待されたテスト用文字列をそのまま返却する。"
+      },
+      {
+        "name": "デバッグ用文字列を返すモジュールを利用する",
+        "references": [
+          "利用者はデバッグ用途の処理結果として所定の文字列を取得したい。",
+          "システムはデバッグ用モジュールの実行により、定められた固定文字列を返す。"
+        ],
+        "description": "利用者はデバッグ用モジュールを利用し、実行結果として所定の固定文字列を取得する。システムはデバッグ用機能を実行し、期待されたデバッグ用文字列をそのまま返却する。"
+      }
+    ],
+    "sub_usecases": [
+      {
+        "name": "テスト用文字列の値を確認する",
+        "description": "テスト用文字列を返すモジュールを利用する際、TempModuleクラスのrunメソッドが正しく「temp for testing abcxyz」という固定文字列を返すかを確認する処理。これは、テスト用モジュールの実行結果が期待通りであることを利用者が検証するためのステップであり、メインユースケース「テスト用文字列を返すモジュールを利用する」に従属する。",
+        "reasons": "テスト用モジュールの動作が仕様通りであることを保証し、利用者がテスト目的で正しい文字列を取得できるようにするため必要。"
+      },
+      {
+        "name": "デバッグ用文字列の値を確認する",
+        "description": "デバッグ用文字列を返すモジュールを利用する際、TempModuleクラスのrunメソッドが正しく「temp for debugging」という固定文字列を返すかを確認する処理。これは、デバッグ用モジュールの実行結果が期待通りであることを利用者が検証するためのステップであり、メインユースケース「デバッグ用文字列を返すモジュールを利用する」に従属する。",
+        "reasons": "デバッグ用モジュールの動作が仕様通りであることを保証し、利用者がデバッグ目的で正しい文字列を取得できるようにするため必要。"
+      }
+    ],
+    "relations": [
+      {
+        "src": "テスト用文字列を返すモジュールを利用する",
+        "dst": "テスト用文字列の値を確認する",
+        "type": "includes"
+      },
+      {
+        "src": "デバッグ用文字列を返すモジュールを利用する",
+        "dst": "デバッグ用文字列の値を確認する",
+        "type": "includes"
+      }
+    ],
+    "sub_systems": [
+      {
+        "name": "テスト・デバッグモジュール利用",
+        "description": "利用者がテスト用またはデバッグ用のモジュールを実行し、所定の固定文字列を取得する機能をまとめたサブシステム。テストとデバッグ用途の文字列取得に関するユースケースを統合し、モジュール単位で利用者の目的を達成する。",
+        "usecases": [
+          "テスト用文字列を返すモジュールを利用する",
+          "デバッグ用文字列を返すモジュールを利用する"
+        ],
+        "sub_systems": [
+          {
+            "name": "テスト用モジュール利用",
+            "description": "テスト用モジュールを利用し、テスト用の固定文字列を取得・確認する機能をまとめたサブシステム。",
+            "usecases": [
+              "テスト用文字列を返すモジュールを利用する",
+              "テスト用文字列の値を確認する"
+            ],
+            "sub_systems": []
+          },
+          {
+            "name": "デバッグ用モジュール利用",
+            "description": "デバッグ用モジュールを利用し、デバッグ用の固定文字列を取得・確認する機能をまとめたサブシステム。",
+            "usecases": [
+              "デバッグ用文字列を返すモジュールを利用する",
+              "デバッグ用文字列の値を確認する"
+            ],
+            "sub_systems": []
+          }
+        ]
+      }
+    ]
+  },
+  "activity_diagrams": {
+    "diagrams": [
+      {
+        "use_case_name": "デバッグ用文字列を返すモジュールを利用する",
+        "diagram": [
+          "@startuml",
+          "title デバッグ用文字列を返すモジュールを利用する",
+          "",
+          "|利用者|",
+          "start",
+          ":デバッグ用モジュールの利用を開始する;",
+          ":システムにデバッグ用文字列の取得を要求する;",
+          "",
+          "|システム|",
+          ":デバッグ用モジュールのインスタンスを生成する;",
+          ":デバッグ用モジュールの実行メソッドを呼び出す;",
+          ":固定文字列「temp for debugging」を取得する;",
+          "",
+          "|利用者|",
+          ":取得した文字列を受け取る;",
+          "",
+          ":デバッグ用文字列の値を確認する;",
+          "note right",
+          "「デバッグ用文字列の値を確認する」サブユースケースの",
+          "アクティビティ図を参照",
+          "end note",
+          "",
+          "stop",
+          "@enduml"
+        ],
+        "file_id": null
+      },
+      {
+        "use_case_name": "デバッグ用文字列の値を確認する",
+        "diagram": [
+          "@startuml",
+          "title デバッグ用文字列の値を確認する",
+          "",
+          "|利用者|",
+          "start",
+          ":システムから返却された文字列を確認する;",
+          "if (返却された文字列は「temp for debugging」か?) then (はい)",
+          "  :期待通りのデバッグ用文字列であることを確認;",
+          "else (いいえ)",
+          "  :エラーとして扱い、システムに通知または再試行を検討;",
+          "endif",
+          "stop",
+          "@enduml"
+        ],
+        "file_id": null
+      },
+      {
+        "use_case_name": "テスト用文字列を返すモジュールを利用する",
+        "diagram": [
+          "@startuml",
+          "title テスト用文字列を返すモジュールを利用する",
+          "",
+          "|利用者|",
+          "start",
+          ":テスト用モジュールの利用を開始する;",
+          ":システムにテスト用文字列の取得を要求する;",
+          "",
+          "|システム|",
+          ":テスト用モジュールのインスタンスを生成する;",
+          ":テスト用モジュールの実行メソッドを呼び出す;",
+          ":固定文字列「temp for testing abcxyz」を取得する;",
+          "",
+          "|利用者|",
+          ":取得した文字列を受け取る;",
+          "",
+          ":テスト用文字列の値を確認する;",
+          "note right",
+          "「テスト用文字列の値を確認する」サブユースケースの",
+          "アクティビティ図を参照",
+          "end note",
+          "",
+          "stop",
+          "@enduml"
+        ],
+        "file_id": null
+      },
+      {
+        "use_case_name": "テスト用文字列の値を確認する",
+        "diagram": [
+          "@startuml",
+          "title テスト用文字列の値を確認する",
+          "",
+          "|利用者|",
+          "start",
+          ":システムから返却された文字列を確認する;",
+          "if (返却された文字列は「temp for testing abcxyz」か?) then (はい)",
+          "  :期待通りのテスト用文字列であることを確認;",
+          "else (いいえ)",
+          "  :エラーとして扱い、システムに通知または再試行を検討;",
+          "endif",
+          "stop",
+          "@enduml"
+        ],
+        "file_id": null
+      }
+    ]
+  },
+  "screen_transition_diagram": {
+    "screen_dict": null,
+    "screen_flow_diagram": null,
+    "annotations": null
+  },
+  "screen_design": {
+    "screen_designs": []
+  },
+  "database_design_data": {
+    "table_descriptions": [],
+    "er_diagram": []
+  },
+  "interface_design": {
+    "auth_methods": [],
+    "endpoint_data": []
+  },
+  "sequence_diagram_data": {
+    "scenarios": [
+      {
+        "name": "デバッグ用文字列の値を確認する",
+        "description": "利用者がデバッグ用モジュールから返却された文字列を確認し、その値が期待値「temp for debugging」と一致するかを判定するシナリオである。一致する場合は期待通りの結果として確認し、不一致の場合はエラーとして扱い、通知または再試行を検討する。",
+        "sub_scenarios": [
+          "利用者がTempModule_2のインスタンスを生成する",
+          "利用者がTempModule_2のrunメソッドを呼び出す",
+          "TempModule_2が文字列「temp for debugging」を返却する",
+          "利用者が返却された文字列を確認する",
+          "返却された文字列が「temp for debugging」と一致するか判定する",
+          "一致する場合、期待通りのデバッグ用文字列であることを確認する",
+          "一致しない場合、エラーとして扱い、システムに通知または再試行を検討する"
+        ]
+      },
+      {
+        "name": "テスト用文字列の値を確認する",
+        "description": "利用者がテスト用モジュールから返却された文字列を確認し、その値が期待値「temp for testing abcxyz」と一致するかを判定するシナリオである。一致する場合は期待通りの結果として確認し、不一致の場合はエラーとして扱い、通知または再試行を検討する。",
+        "sub_scenarios": [
+          "利用者がTempModuleインスタンスを生成する",
+          "利用者がTempModuleのrunメソッドを呼び出す",
+          "TempModuleが「temp for testing abcxyz」という文字列を返却する",
+          "利用者が返却された文字列を確認する",
+          "返却された文字列が「temp for testing abcxyz」と一致するか判定する",
+          "一致する場合は期待通りの結果として確認する",
+          "一致しない場合はエラーとして扱い、通知または再試行を検討する"
+        ]
+      },
+      {
+        "name": "デバッグ用文字列を返すモジュールを利用する",
+        "description": "利用者がSRC/temp_module_2.pyに定義されたTempModuleを利用し、インスタンス生成後にrun(self)を呼び出して固定文字列「temp for debugging」を取得する基本シナリオである。システムは単一メソッドの実行のみを行い、固定のデバッグ用文字列を返却する。",
+        "sub_scenarios": [
+          "利用者がデバッグ用モジュールの利用を開始する",
+          "利用者がシステムにデバッグ用文字列の取得を要求する",
+          "システムがSRC/temp_module_2.pyのTempModuleインスタンスを生成する",
+          "システムがTempModuleのrun(self)メソッドを呼び出す",
+          "TempModuleが固定文字列「temp for debugging」を返却する",
+          "システムが取得した文字列を利用者に返す",
+          "利用者が受け取ったデバッグ用文字列の値を確認する"
+        ]
+      },
+      {
+        "name": "テスト用文字列を返すモジュールを利用する",
+        "description": "利用者がSRC/temp_module.pyに定義されたTempModuleを利用し、インスタンス生成後にrun(self)を呼び出して固定文字列「temp for testing abcxyz」を取得する基本シナリオである。システムは追加処理や外部連携を行わず、要求された文字列をそのまま返却する。",
+        "sub_scenarios": [
+          "利用者がテスト用モジュールの利用を開始する。",
+          "利用者がシステムにテスト用文字列の取得を要求する。",
+          "システムがSRC/temp_module.pyのTempModuleクラスのインスタンスを生成する。",
+          "システムがTempModuleインスタンスのrun(self)メソッドを呼び出す。",
+          "TempModuleが固定文字列「temp for testing abcxyz」を返却する。",
+          "システムが取得した文字列を利用者に返す。",
+          "利用者が受け取った文字列の値を確認する。"
+        ]
+      }
+    ],
+    "participants": [
+      {
+        "name": "デバッグ用文字列の値を確認する",
+        "participants": [
+          "利用者",
+          "TempModule_2"
+        ]
+      },
+      {
+        "name": "テスト用文字列の値を確認する",
+        "participants": [
+          "利用者",
+          "TempModule"
+        ]
+      },
+      {
+        "name": "デバッグ用文字列を返すモジュールを利用する",
+        "participants": [
+          "利用者",
+          "システム",
+          "TempModule（SRC/temp_module_2.py）"
+        ]
+      },
+      {
+        "name": "テスト用文字列を返すモジュールを利用する",
+        "participants": [
+          "利用者",
+          "システム",
+          "TempModule"
+        ]
+      }
+    ],
+    "sequence_diagrams": [
+      {
+        "scenario_name": "デバッグ用文字列の値を確認する",
+        "sequence_diagram": [
+          "@startuml",
+          "title デバッグ用文字列の値を確認する: TempModule_2のrunメソッド返却値判定シナリオ",
+          "",
+          "actor 利用者",
+          "participant TempModule_2",
+          "",
+          "== 利用者がTempModule_2のインスタンスを生成する ==",
+          "利用者 -> TempModule_2: インスタンス生成要求",
+          "activate TempModule_2",
+          "TempModule_2 --> 利用者: TempModule_2インスタンス",
+          "deactivate TempModule_2",
+          "",
+          "== 利用者がTempModule_2のrunメソッドを呼び出す ==",
+          "利用者 -> TempModule_2: run()呼び出し",
+          "activate TempModule_2",
+          "",
+          "== TempModule_2が文字列「temp for debugging」を返却する ==",
+          "TempModule_2 --> 利用者: \"temp for debugging\"",
+          "deactivate TempModule_2",
+          "",
+          "== 利用者が返却された文字列を確認する ==",
+          "利用者 -> 利用者: 返却値を確認",
+          "",
+          "== 返却された文字列が「temp for debugging」と一致するか判定する ==",
+          "alt 返却値 == \"temp for debugging\"",
+          "    == 一致する場合、期待通りのデバッグ用文字列であることを確認する ==",
+          "    利用者 -> 利用者: 期待通りの結果として確認",
+          "else 一致しない場合",
+          "    == 一致しない場合、エラーとして扱い、システムに通知または再試行を検討する ==",
+          "    利用者 -> 利用者: エラーとして扱い、通知または再試行を検討",
+          "end",
+          "",
+          "@enduml"
+        ]
+      },
+      {
+        "scenario_name": "テスト用文字列の値を確認する",
+        "sequence_diagram": [
+          "@startuml",
+          "title テスト用文字列の値を確認する: TempModuleのrunメソッドの返却値検証シナリオ",
+          "",
+          "actor 利用者",
+          "participant TempModule",
+          "",
+          "== 利用者がTempModuleインスタンスを生成する ==",
+          "利用者 -> TempModule: インスタンス生成要求",
+          "activate TempModule",
+          "TempModule --> 利用者: TempModuleインスタンス返却",
+          "deactivate TempModule",
+          "",
+          "== 利用者がTempModuleのrunメソッドを呼び出す ==",
+          "利用者 -> TempModule: run() メソッド呼び出し",
+          "activate TempModule",
+          "",
+          "== TempModuleが「temp for testing abcxyz」という文字列を返却する ==",
+          "TempModule --> 利用者: \"temp for testing abcxyz\" を返却",
+          "deactivate TempModule",
+          "",
+          "== 利用者が返却された文字列を確認する ==",
+          "利用者 -> 利用者: 返却値を確認",
+          "",
+          "== 返却された文字列が「temp for testing abcxyz」と一致するか判定する ==",
+          "alt 返却値が「temp for testing abcxyz」と一致",
+          "    == 一致する場合は期待通りの結果として確認する ==",
+          "    利用者 -> 利用者: 期待通りの結果として確認",
+          "else 一致しない場合",
+          "    == 一致しない場合はエラーとして扱い、通知または再試行を検討する ==",
+          "    利用者 -> 利用者: エラーとして扱い、通知または再試行を検討",
+          "end",
+          "",
+          "@enduml"
+        ]
+      },
+      {
+        "scenario_name": "デバッグ用文字列を返すモジュールを利用する",
+        "sequence_diagram": [
+          "@startuml",
+          "title デバッグ用文字列を返すモジュールを利用する",
+          "",
+          "actor 利用者",
+          "participant システム",
+          "participant \"TempModule（SRC/temp_module_2.py）\" as TempModule",
+          "",
+          "== 利用者がデバッグ用モジュールの利用を開始する ==",
+          "activate 利用者",
+          "",
+          "== 利用者がシステムにデバッグ用文字列の取得を要求する ==",
+          "利用者 -> システム : デバッグ用文字列の取得を要求",
+          "activate システム",
+          "",
+          "== システムがSRC/temp_module_2.pyのTempModuleインスタンスを生成する ==",
+          "システム -> TempModule : インスタンス生成",
+          "activate TempModule",
+          "",
+          "== システムがTempModuleのrun(self)メソッドを呼び出す ==",
+          "システム -> TempModule : run(self)呼び出し",
+          "",
+          "== TempModuleが固定文字列「temp for debugging」を返却する ==",
+          "TempModule --> システム : \"temp for debugging\"",
+          "",
+          "deactivate TempModule",
+          "",
+          "== システムが取得した文字列を利用者に返す ==",
+          "システム --> 利用者 : \"temp for debugging\"",
+          "deactivate システム",
+          "",
+          "== 利用者が受け取ったデバッグ用文字列の値を確認する ==",
+          "deactivate 利用者",
+          "",
+          "@enduml"
+        ]
+      },
+      {
+        "scenario_name": "テスト用文字列を返すモジュールを利用する",
+        "sequence_diagram": [
+          "@startuml",
+          "title テスト用文字列を返すモジュールを利用する",
+          "",
+          "participant 利用者",
+          "participant システム",
+          "participant TempModule",
+          "",
+          "== 利用者がテスト用モジュールの利用を開始する。 ==",
+          "activate 利用者",
+          "",
+          "== 利用者がシステムにテスト用文字列の取得を要求する。 ==",
+          "利用者 -> システム : テスト用文字列の取得を要求",
+          "activate システム",
+          "",
+          "== システムがSRC/temp_module.pyのTempModuleクラスのインスタンスを生成する。 ==",
+          "システム -> TempModule : インスタンス生成",
+          "activate TempModule",
+          "",
+          "== システムがTempModuleインスタンスのrun(self)メソッドを呼び出す。 ==",
+          "システム -> TempModule : run(self)呼び出し",
+          "",
+          "== TempModuleが固定文字列「temp for testing abcxyz」を返却する。 ==",
+          "TempModule --> システム : \"temp for testing abcxyz\"",
+          "",
+          "deactivate TempModule",
+          "",
+          "== システムが取得した文字列を利用者に返す。 ==",
+          "システム --> 利用者 : \"temp for testing abcxyz\"",
+          "deactivate システム",
+          "",
+          "== 利用者が受け取った文字列の値を確認する。 ==",
+          "deactivate 利用者",
+          "",
+          "@enduml"
+        ]
+      }
+    ]
+  },
+  "directory_structure": {
+    "folder_structure": [
+      "SRC/"
+    ],
+    "naming_conventions": {
+      "folders": {
+        "purpose": "フォルダ名はすべて大文字で、プロジェクトの主要なソースディレクトリを明示する。Pythonプロジェクトの小規模構成では、SRCのような簡潔な名前を用いる。",
+        "example": "SRC"
+      },
+      "files": {
+        "purpose": "ファイル名は小文字のスネークケースで記述し、モジュールの内容や目的を端的に表す。拡張子は.pyとする。",
+        "example": "temp_module.py"
+      },
+      "classes": {
+        "purpose": "クラス名はパスカルケース（先頭大文字＋単語区切り大文字）で記述し、機能や役割を明示する。",
+        "example": "TempModule"
+      },
+      "functions": {
+        "purpose": "関数名・メソッド名は小文字のスネークケースで記述し、動作や目的を端的に表す。",
+        "example": "run"
+      },
+      "variables": {
+        "purpose": "変数名は小文字のスネークケースで記述し、内容や用途を簡潔に表す。",
+        "example": "result_value"
+      },
+      "constants": {
+        "purpose": "定数名はすべて大文字のスネークケースで記述し、変更不可の値であることを明示する。",
+        "example": "MAX_COUNT"
+      }
+    },
+    "file_placement_rules": {
+      "main_source": {
+        "description": "プロジェクトの主要なPythonモジュールファイル（temp_module.py, temp_module_2.py）を配置する。各ファイルは独立したクラス定義のみを含み、他の層やインフラストラクチャは存在しない。",
+        "location": "SRC/",
+        "example": "SRC/"
+      }
+    },
+    "module_partitioning_policies": [
+      {
+        "title": "単一ソースディレクトリによるモジュール分割",
+        "description": "プロジェクトはSRCディレクトリ配下に、要件ごとに独立したPythonモジュールファイルを直接配置する。各モジュールは他と依存せず、クラス定義のみを含む。レイヤーやサービス分離は行わず、ファイル単位で機能を分割することでシンプルな構成を維持する。"
+      }
+    ]
+  }
+}
