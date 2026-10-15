@@ -1,3 +1,3 @@
 class TempModule:
     def run(self):
-        return "temp for testing"
+        return "temp for testing xxx"
