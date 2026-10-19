@@ -1,0 +1,127 @@
+{
+  "class_design": {
+    "class_diagram": [
+      "@startuml",
+      "",
+      "",
+      "class TempModule {",
+      "  + run(): str",
+      "}",
+      "",
+      "class TempModule2 {",
+      "  - temp_module: TempModule",
+      "  + run(): str",
+      "}",
+      "TempModule2 --> TempModule",
+      "@enduml"
+    ],
+    "files": {
+      "SRC/temp_module.py": [
+        {
+          "class_id": "TempModule",
+          "class_name": "TempModule",
+          "class_detailed_design": {
+            "class_name": "TempModule",
+            "class_description": "テンプレート`{Subject}`から派生したTempModule。runメソッドを通じて所定の文字列を返す機能を持つ。",
+            "field_details": [],
+            "method_details": [
+              {
+                "id": "run",
+                "name": "run(self)",
+                "access_modifier": "public",
+                "other_modifiers": [],
+                "params": [],
+                "returns": "所定の文字列。例: 'TempModule実行結果'",
+                "return_type": "str",
+                "overview": "TempModuleの主要な処理を実行し、所定の文字列を返す。",
+                "description": "このメソッドの流れは以下になります。\n1. 所定の文字列（例: 'TempModule実行結果'）を返す。",
+                "exceptions": {},
+                "dependencies": [],
+                "api_path": ""
+              }
+            ]
+          }
+        }
+      ],
+      "SRC/temp_module2.py": [
+        {
+          "class_id": "TempModule2",
+          "class_name": "TempModule2",
+          "class_detailed_design": {
+            "class_name": "TempModule2",
+            "class_description": "テンプレート`{Subject}`から派生したTempModule2。TempModuleのrunメソッドを利用し、所定の文字列を返す機能を持つ。",
+            "field_details": [
+              {
+                "name": "temp_module",
+                "access_modifier": null,
+                "other_modifiers": [],
+                "type": "TempModule",
+                "description": "TempModuleのインスタンス。TempModule2のrunメソッド内でTempModuleのrunメソッドを呼び出すために使用する。",
+                "default": null
+              }
+            ],
+            "method_details": [
+              {
+                "id": "run",
+                "name": "run(self)",
+                "access_modifier": null,
+                "other_modifiers": [],
+                "params": [],
+                "returns": "TempModuleのrunメソッドから返された所定の文字列。例: 'TempModule実行結果'",
+                "return_type": "str",
+                "overview": "TempModuleのrunメソッドを呼び出し、その結果を返す。TempModule2の主要な処理を実行する。",
+                "description": "このメソッドの流れは以下になります。\n1. TempModuleのrunメソッドを呼び出す。\n2. TempModuleのrunメソッドから返された文字列をそのまま返す。",
+                "exceptions": {
+                  "Exception": "TempModuleのrunメソッド呼び出し時に例外が発生した場合、そのまま再スローする。"
+                },
+                "dependencies": [],
+                "api_path": ""
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "method_design": {
+    "files": {
+      "SRC/main.py": [
+        {
+          "method_id": "main()",
+          "method_name": "main()",
+          "method_detail": {
+            "description": "TempModuleおよびTempModule2のrunメソッドを呼び出し、結果を標準出力に表示する。\nこのメソッドの流れは以下になります。\n1. TempModuleのインスタンスを生成する。\n2. TempModuleのrunメソッドを呼び出し、結果を取得する。\n3. TempModule2のインスタンスを生成する。\n4. TempModule2のrunメソッドを呼び出し、結果を取得する。\n5. 両方の結果を標準出力に表示する。",
+            "access_modifier": "public",
+            "other_modifiers": [],
+            "params": [],
+            "return_type": "None",
+            "returns": null,
+            "exceptions": {},
+            "api_path": null,
+            "params_example": "",
+            "return_example": ""
+          }
+        }
+      ]
+    }
+  },
+  "interface_design": {
+    "endpoints": []
+  },
+  "folder_structure": {
+    "summaries": {
+      "SRC": "メインソースレイヤー。各Pythonモジュール（temp_module.py, temp_module2.py, main.py）が直接配置され、独立した機能を提供する。追加の抽象化や分離は行わず、シンプルな責務分担を実現する。"
+    },
+    "folder_structure": [
+      "```plaintext",
+      ".",
+      "├── - 例: SRC/",
+      "├── - 配置場所: SRC/",
+      "└── SRC/",
+      "    ├── main.py",
+      "    ├── temp_module.py",
+      "    └── temp_module2.py",
+      "```"
+    ]
+  }
+}
