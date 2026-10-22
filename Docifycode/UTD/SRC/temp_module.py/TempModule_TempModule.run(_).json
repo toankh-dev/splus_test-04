@@ -1,0 +1,36 @@
+{
+  "io_patterns": null,
+  "possible_patterns": {
+    "1": {
+      "input": {
+        "self": "TempModule instance"
+      },
+      "output": {
+        "return_value": "\"temp for testing\" (str)",
+        "exception": "None (NoneType)"
+      },
+      "note": "正常系。戻り値の文字列と型が完全一致することを確認する。分岐、外部依存、副作用はない。"
+    },
+    "2": {
+      "input": {
+        "self": "None (NoneType)"
+      },
+      "output": {
+        "return_value": "\"temp for testing\" (str)",
+        "exception": "None (NoneType)"
+      },
+      "note": "境界値・型不一致。非束縛メソッドにselfとしてNoneを明示的に渡す。selfを参照しないため、通常と同じ文字列を返す。"
+    },
+    "3": {
+      "input": {
+        "self": "0 (int)"
+      },
+      "output": {
+        "return_value": "\"temp for testing\" (str)",
+        "exception": "None (NoneType)"
+      },
+      "note": "型不一致。非束縛メソッドにselfとして整数を明示的に渡す。Pythonでは引数の型を自動検証せず、selfも使用しないため例外は発生しない。"
+    }
+  },
+  "additional_possible_patterns": null
+}

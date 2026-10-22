@@ -1,0 +1,412 @@
+{
+  "io_patterns": null,
+  "possible_patterns": {
+    "1": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "0.2 (float)"
+      },
+      "output": {
+        "return_value": "80.0 (float)"
+      },
+      "note": "正常系。合計金額から20%を割り引く。"
+    },
+    "2": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "0 (int)"
+      },
+      "output": {
+        "return_value": "100 (int)"
+      },
+      "note": "割引率の下限。割引なしで元の金額を返す。整数同士の計算では戻り値もintになる。"
+    },
+    "3": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "1 (int)"
+      },
+      "output": {
+        "return_value": "0 (int)"
+      },
+      "note": "割引率の上限。100%割引でゼロになる。"
+    },
+    "4": {
+      "input": {
+        "total": "100.0 (float)",
+        "discount_rate": "0.0 (float)"
+      },
+      "output": {
+        "return_value": "100.0 (float)"
+      },
+      "note": "浮動小数点数での下限。戻り値の型も確認する。"
+    },
+    "5": {
+      "input": {
+        "total": "100.0 (float)",
+        "discount_rate": "1.0 (float)"
+      },
+      "output": {
+        "return_value": "0.0 (float)"
+      },
+      "note": "浮動小数点数での上限。"
+    },
+    "6": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "-0.000001 (float)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "\"discount_rate must be between 0 and 1\" (str)"
+      },
+      "note": "下限の直外。最初の比較で不正と判定される。"
+    },
+    "7": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "1.000001 (float)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "\"discount_rate must be between 0 and 1\" (str)"
+      },
+      "note": "上限の直外。最初の比較は偽、次の比較は真となる。"
+    },
+    "8": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "0.000001 (float)"
+      },
+      "output": {
+        "return_value": "100.0 (float)"
+      },
+      "note": "下限の直内。割引は有効だが、小数第2位への丸めにより元の金額になる。"
+    },
+    "9": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "0.999999 (float)"
+      },
+      "output": {
+        "return_value": "0.0 (float)"
+      },
+      "note": "上限の直内。残額が小さいため、小数第2位への丸めでゼロになる。"
+    },
+    "10": {
+      "input": {
+        "total": "0 (int)",
+        "discount_rate": "0.5 (float)"
+      },
+      "output": {
+        "return_value": "0.0 (float)"
+      },
+      "note": "合計金額がゼロの場合。"
+    },
+    "11": {
+      "input": {
+        "total": "0 (int)",
+        "discount_rate": "-0.1 (float)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "\"discount_rate must be between 0 and 1\" (str)"
+      },
+      "note": "合計金額がゼロでも割引率検証は省略されない。"
+    },
+    "12": {
+      "input": {
+        "total": "-100 (int)",
+        "discount_rate": "0.25 (float)"
+      },
+      "output": {
+        "return_value": "-75.0 (float)"
+      },
+      "note": "負の合計金額。非負制約は定義されていないため、通常どおり割引計算する。"
+    },
+    "13": {
+      "input": {
+        "total": "10.126 (float)",
+        "discount_rate": "0 (int)"
+      },
+      "output": {
+        "return_value": "10.13 (float)"
+      },
+      "note": "小数第3位の切り上げ。割引なしでも丸めを適用する。"
+    },
+    "14": {
+      "input": {
+        "total": "10.124 (float)",
+        "discount_rate": "0 (int)"
+      },
+      "output": {
+        "return_value": "10.12 (float)"
+      },
+      "note": "小数第3位の切り捨て。"
+    },
+    "15": {
+      "input": {
+        "total": "1.125 (float)",
+        "discount_rate": "0 (int)"
+      },
+      "output": {
+        "return_value": "1.12 (float)"
+      },
+      "note": "正確に表現可能な中間値。Pythonの偶数丸めで下側の偶数へ丸める。"
+    },
+    "16": {
+      "input": {
+        "total": "1.375 (float)",
+        "discount_rate": "0 (int)"
+      },
+      "output": {
+        "return_value": "1.38 (float)"
+      },
+      "note": "正確に表現可能な中間値。Pythonの偶数丸めで上側の偶数へ丸める。"
+    },
+    "17": {
+      "input": {
+        "total": "2.675 (float)",
+        "discount_rate": "0 (int)"
+      },
+      "output": {
+        "return_value": "2.67 (float)"
+      },
+      "note": "二進浮動小数点の表現誤差を伴う丸め。十進数の四捨五入とは結果が異なることを確認する。"
+    },
+    "18": {
+      "input": {
+        "total": "\"100\" (str)",
+        "discount_rate": "0.2 (float)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "合計金額の型不一致。文字列とfloatの乗算はできない。"
+    },
+    "19": {
+      "input": {
+        "total": "\"100\" (str)",
+        "discount_rate": "0 (int)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "文字列とintの乗算自体は成功するが、結果の文字列をroundに渡す段階で失敗する。"
+    },
+    "20": {
+      "input": {
+        "total": "None (NoneType)",
+        "discount_rate": "0.2 (float)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "合計金額がNone。乗算で失敗する。"
+    },
+    "21": {
+      "input": {
+        "total": "[100] (list[int])",
+        "discount_rate": "0 (int)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "合計金額がリスト。整数による反復後、roundに対応しないため失敗する。"
+    },
+    "22": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "\"0.2\" (str)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "割引率が文字列。最初の大小比較で失敗し、数値への自動変換は行わない。"
+    },
+    "23": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "None (NoneType)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "割引率がNone。最初の大小比較で失敗する。"
+    },
+    "24": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "0.2+0j (complex)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "割引率が複素数。実数部分が範囲内でも大小比較はできない。"
+    },
+    "25": {
+      "input": {
+        "total": "100+2j (complex)",
+        "discount_rate": "0.5 (float)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "合計金額が複素数。乗算後の複素数はroundに対応しない。"
+    },
+    "26": {
+      "input": {
+        "total": "None (NoneType)",
+        "discount_rate": "2 (int)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "\"discount_rate must be between 0 and 1\" (str)"
+      },
+      "note": "両入力が不正な場合の検証順序。合計金額の計算より先に割引率のValueErrorが発生する。"
+    },
+    "27": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "False (bool)"
+      },
+      "output": {
+        "return_value": "100 (int)"
+      },
+      "note": "boolはintの派生型であるためFalseは割引率0として扱われる。"
+    },
+    "28": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "True (bool)"
+      },
+      "output": {
+        "return_value": "0 (int)"
+      },
+      "note": "Trueは割引率1として扱われる。boolを拒否する明示的検証はない。"
+    },
+    "29": {
+      "input": {
+        "total": "True (bool)",
+        "discount_rate": "0.5 (float)"
+      },
+      "output": {
+        "return_value": "0.5 (float)"
+      },
+      "note": "合計金額のboolは整数1として計算される。"
+    },
+    "30": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "正の無限大 (float)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "\"discount_rate must be between 0 and 1\" (str)"
+      },
+      "note": "割引率の正の無限大は上限超過として拒否する。"
+    },
+    "31": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "負の無限大 (float)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "\"discount_rate must be between 0 and 1\" (str)"
+      },
+      "note": "割引率の負の無限大は下限未満として拒否する。"
+    },
+    "32": {
+      "input": {
+        "total": "100 (int)",
+        "discount_rate": "NaN (float)"
+      },
+      "output": {
+        "return_value": "NaN (float)"
+      },
+      "note": "NaNは両方の大小比較が偽となり検証を通過する。pytestでは等値比較ではなくNaN判定を行う。許容範囲検証の抜けを示すケース。"
+    },
+    "33": {
+      "input": {
+        "total": "NaN (float)",
+        "discount_rate": "0.5 (float)"
+      },
+      "output": {
+        "return_value": "NaN (float)"
+      },
+      "note": "合計金額のNaNが結果へ伝播する。pytestではNaN判定を使用する。"
+    },
+    "34": {
+      "input": {
+        "total": "正の無限大 (float)",
+        "discount_rate": "0.5 (float)"
+      },
+      "output": {
+        "return_value": "正の無限大 (float)"
+      },
+      "note": "非有限の合計金額は検証されない。桁数指定付きroundは無限大をそのまま返す。"
+    },
+    "35": {
+      "input": {
+        "total": "負の無限大 (float)",
+        "discount_rate": "0.5 (float)"
+      },
+      "output": {
+        "return_value": "負の無限大 (float)"
+      },
+      "note": "負の無限大も結果へ伝播する。"
+    },
+    "36": {
+      "input": {
+        "total": "正の無限大 (float)",
+        "discount_rate": "1 (int)"
+      },
+      "output": {
+        "return_value": "NaN (float)"
+      },
+      "note": "無限大とゼロの乗算はNaNとなるため、100%割引でもゼロを返さない。"
+    },
+    "37": {
+      "input": {
+        "total": "100.00 (decimal.Decimal)",
+        "discount_rate": "0.25 (decimal.Decimal)"
+      },
+      "output": {
+        "return_value": "75.00 (decimal.Decimal)"
+      },
+      "note": "Decimal同士の正常系。decimalの標準コンテキストを使用し、戻り値の型と小数桁も確認する。"
+    },
+    "38": {
+      "input": {
+        "total": "100.00 (decimal.Decimal)",
+        "discount_rate": "0.25 (float)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "Decimalの合計金額とfloatの割引率を混在させると乗算で失敗する。"
+    },
+    "39": {
+      "input": {
+        "total": "100.0 (float)",
+        "discount_rate": "0.25 (decimal.Decimal)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "floatの合計金額とDecimalの割引率を混在させると乗算で失敗する。"
+    },
+    "40": {
+      "input": {
+        "total": "-0.0 (float)",
+        "discount_rate": "0.5 (float)"
+      },
+      "output": {
+        "return_value": "-0.0 (float)"
+      },
+      "note": "符号付きゼロの境界。戻り値が負のゼロであることは通常の等値比較だけでは確認できないため、符号も検証する。"
+    }
+  },
+  "additional_possible_patterns": null
+}

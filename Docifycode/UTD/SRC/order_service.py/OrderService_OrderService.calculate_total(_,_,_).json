@@ -1,0 +1,508 @@
+{
+  "io_patterns": null,
+  "possible_patterns": {
+    "1": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10, 20, 30] (list[int])",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "66.0 (float)"
+      },
+      "note": "正常系。複数商品の合計に税率を適用する。"
+    },
+    "2": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10, 20] (list[int])",
+        "tax_rate": "0 (int)"
+      },
+      "output": {
+        "return_value": "30 (int)"
+      },
+      "note": "税率の下限。整数だけの計算では戻り値もintとなる。"
+    },
+    "3": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10, 20] (list[int])",
+        "tax_rate": "0.0 (float)"
+      },
+      "output": {
+        "return_value": "30.0 (float)"
+      },
+      "note": "浮動小数点の税率ゼロ。数値と戻り値の型を確認する。"
+    },
+    "4": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[0, 0] (list[int])",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "0.0 (float)"
+      },
+      "note": "空でないリストの小計がゼロになる境界値。"
+    },
+    "5": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10] (list[int])",
+        "tax_rate": "1 (int)"
+      },
+      "output": {
+        "return_value": "20 (int)"
+      },
+      "note": "商品が1件で税率が100%の場合。"
+    },
+    "6": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10] (list[int])",
+        "tax_rate": "1.5 (float)"
+      },
+      "output": {
+        "return_value": "25.0 (float)"
+      },
+      "note": "税率に上限の規定はないため、100%を超える非負の税率も受け付ける。"
+    },
+    "7": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10] (list[int])",
+        "tax_rate": "-0.000001 (float)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "'tax_rate must not be negative' (str)"
+      },
+      "note": "ゼロ直下の負の税率を拒否する。"
+    },
+    "8": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10] (list[int])",
+        "tax_rate": "-1 (int)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "'tax_rate must not be negative' (str)"
+      },
+      "note": "整数の負の税率を拒否する。"
+    },
+    "9": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10] (list[int])",
+        "tax_rate": "-0.0 (float)"
+      },
+      "output": {
+        "return_value": "10.0 (float)"
+      },
+      "note": "負のゼロはゼロ未満ではないため受け付ける。"
+    },
+    "10": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[] (list)",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "0 (int)"
+      },
+      "note": "商品がない場合は税計算を行わず整数のゼロを返す。"
+    },
+    "11": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[] (list)",
+        "tax_rate": "-0.1 (float)"
+      },
+      "output": {
+        "return_value": "0 (int)"
+      },
+      "note": "空の商品リストでは税率の検証も省略される。空の場合にも負の税率を拒否すべきかは仕様確認事項。"
+    },
+    "12": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[] (list)",
+        "tax_rate": "None (NoneType)"
+      },
+      "output": {
+        "return_value": "0 (int)"
+      },
+      "note": "空入力の短絡により、税率の型が不正でも比較は実行されない。"
+    },
+    "13": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "None (NoneType)",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "0 (int)"
+      },
+      "note": "pricesの型違い。Noneは偽として扱われ、空リストと同様にゼロを返す。"
+    },
+    "14": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "0 (int)",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "0 (int)"
+      },
+      "note": "pricesに非反復可能な値を渡しても、整数ゼロは短絡によって受け付けられる。"
+    },
+    "15": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "False (bool)",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "0 (int)"
+      },
+      "note": "pricesの型違い。Falseも空入力として扱われる。"
+    },
+    "16": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "'' (str)",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "0 (int)"
+      },
+      "note": "pricesの型違い。空文字列は偽であるため加算されない。"
+    },
+    "17": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10.125] (list[float])",
+        "tax_rate": "0.0 (float)"
+      },
+      "output": {
+        "return_value": "10.12 (float)"
+      },
+      "note": "正確に表現可能な丸め境界。偶数丸めによって小数第2位が偶数の側になる。"
+    },
+    "18": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10.375] (list[float])",
+        "tax_rate": "0.0 (float)"
+      },
+      "output": {
+        "return_value": "10.38 (float)"
+      },
+      "note": "偶数丸めで切り上がる境界を確認する。"
+    },
+    "19": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[2.675] (list[float])",
+        "tax_rate": "0.0 (float)"
+      },
+      "output": {
+        "return_value": "2.67 (float)"
+      },
+      "note": "二進浮動小数点の表現誤差による丸めを確認する。十進数としての四捨五入とは異なる。"
+    },
+    "20": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[0.004] (list[float])",
+        "tax_rate": "0.0 (float)"
+      },
+      "output": {
+        "return_value": "0.0 (float)"
+      },
+      "note": "正の小額が小数第2位への丸めでゼロになる境界。"
+    },
+    "21": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10, -3] (list[int])",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "7.7 (float)"
+      },
+      "note": "負の価格による調整を含む。負の価格を禁止する仕様は提示されていないため、そのまま合計する。"
+    },
+    "22": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[-10] (list[int])",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "-11.0 (float)"
+      },
+      "note": "小計が負になる場合も税率を適用する。価格の非負検証が必要かは別途仕様確認事項。"
+    },
+    "23": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10, -10] (list[int])",
+        "tax_rate": "-0.1 (float)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "'tax_rate must not be negative' (str)"
+      },
+      "note": "小計がゼロでも商品リストは空でないため、負の税率を拒否する。"
+    },
+    "24": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "(10, 20) (tuple[int, int])",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "33.0 (float)"
+      },
+      "note": "リスト以外の数値反復可能オブジェクトも合計できる。"
+    },
+    "25": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "generator yielding integers 10 and 20",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "33.0 (float)",
+        "prices_state": "exhausted generator"
+      },
+      "note": "ジェネレーターを合計でき、呼び出し後は消費済みになる。"
+    },
+    "26": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "empty generator yielding no values",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "0.0 (float)"
+      },
+      "note": "空のジェネレーター自体は真として扱われる。空リストと異なり税計算まで実行される。"
+    },
+    "27": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "empty generator yielding no values",
+        "tax_rate": "-0.1 (float)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "'tax_rate must not be negative' (str)"
+      },
+      "note": "空のジェネレーターでは負の税率が検証される。空リストとの挙動差を確認する。"
+    },
+    "28": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "10 (int)",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "pricesの型違い。真となる非反復可能な整数はsumで失敗する。"
+    },
+    "29": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "'10' (str)",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "数値文字列を価格リストとして渡した場合。文字列要素は整数の初期値と加算できない。"
+    },
+    "30": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10, '20'] (list containing int and str)",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "価格リスト内の型違い。数値文字列は自動変換されない。"
+    },
+    "31": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10, None] (list containing int and NoneType)",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "価格に欠損値が含まれる場合は加算できない。"
+    },
+    "32": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10] (list[int])",
+        "tax_rate": "'0.1' (str)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "税率の型違い。数値文字列と整数ゼロの大小比較はできない。"
+    },
+    "33": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10] (list[int])",
+        "tax_rate": "None (NoneType)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "空でない入力に対して税率が未設定の場合。"
+    },
+    "34": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10] (list[int])",
+        "tax_rate": "0.1 + 0j (complex)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "複素数の税率はゼロとの大小比較ができない。"
+    },
+    "35": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[1 + 2j] (list[complex])",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "複素数価格は合計と乗算ができるが、roundで失敗する。"
+    },
+    "36": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[True, False] (list[bool])",
+        "tax_rate": "True (bool)"
+      },
+      "output": {
+        "return_value": "2 (int)"
+      },
+      "note": "boolはintの派生型なので価格は1と0、税率は1として計算される。厳密な型制約の要否は仕様確認事項。"
+    },
+    "37": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10, 'invalid'] (list containing int and str)",
+        "tax_rate": "-0.1 (float)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "'tax_rate must not be negative' (str)"
+      },
+      "note": "価格と税率が両方不正の場合、価格の合計より税率検証が先に行われる。"
+    },
+    "38": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10] (list[int])",
+        "tax_rate": "NaN (float)"
+      },
+      "output": {
+        "return_value": "NaN (float)"
+      },
+      "note": "NaNはゼロ未満の比較で拒否されず、結果もNaNになる。pytestでは通常の等値比較ではなくNaN判定を用いる。"
+    },
+    "39": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10] (list[int])",
+        "tax_rate": "positive infinity (float)"
+      },
+      "output": {
+        "return_value": "positive infinity (float)"
+      },
+      "note": "正の無限大の税率。桁数を指定したroundは無限大をそのまま返す。"
+    },
+    "40": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10] (list[int])",
+        "tax_rate": "negative infinity (float)"
+      },
+      "output": {
+        "exception": "ValueError",
+        "message": "'tax_rate must not be negative' (str)"
+      },
+      "note": "負の無限大の税率は負値として拒否される。"
+    },
+    "41": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[NaN] (list[float])",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "NaN (float)"
+      },
+      "note": "価格にNaNが含まれる場合は合計と結果に伝播する。"
+    },
+    "42": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[positive infinity] (list[float])",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "positive infinity (float)"
+      },
+      "note": "無限大の価格は検証されず、結果も無限大になる。"
+    },
+    "43": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[0] (list[int])",
+        "tax_rate": "positive infinity (float)"
+      },
+      "output": {
+        "return_value": "NaN (float)"
+      },
+      "note": "ゼロと無限大の乗算によるNaNを確認する。"
+    },
+    "44": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[1e308, 1e308] (list[float])",
+        "tax_rate": "0.1 (float)"
+      },
+      "output": {
+        "return_value": "positive infinity (float)"
+      },
+      "note": "非常に大きい浮動小数点価格の合計は無限大になり、OverflowErrorは発生しない。"
+    },
+    "45": {
+      "input": {
+        "self": "OrderService instance",
+        "prices": "[10.0] (list[float])",
+        "tax_rate": "0.1 (decimal.Decimal)"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "floatの小計とDecimalの税率を混在させると、乗算時に型の非互換で失敗する。標準ライブラリの数値型境界を確認する。"
+    }
+  },
+  "additional_possible_patterns": null
+}

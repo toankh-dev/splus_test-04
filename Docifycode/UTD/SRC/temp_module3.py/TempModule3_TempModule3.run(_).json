@@ -1,0 +1,26 @@
+{
+  "io_patterns": null,
+  "possible_patterns": {
+    "1": {
+      "input": {
+        "self": "TempModule3 instance"
+      },
+      "output": {
+        "return_value": "\"temp for mock test\" (str)",
+        "exception": "None (NoneType)"
+      },
+      "note": "正常系。戻り値が指定された文字列と完全一致し、型がstrであることを確認する。引数や条件分岐、外部依存はない。"
+    },
+    "2": {
+      "input": {
+        "self": "None (NoneType)"
+      },
+      "output": {
+        "return_value": "\"temp for mock test\" (str)",
+        "exception": "None (NoneType)"
+      },
+      "note": "型不一致・境界値。クラスから取得した未束縛の関数にselfとしてNoneを明示的に渡す。selfを参照せず型検証も行わないため、同じ文字列が返ることを確認する。通常のインスタンスメソッド呼び出しとは区別する。"
+    }
+  },
+  "additional_possible_patterns": null
+}

@@ -1,0 +1,53 @@
+{
+  "io_patterns": null,
+  "possible_patterns": {
+    "1": {
+      "input": {
+        "self": "TempModule2 instance"
+      },
+      "output": {
+        "return_value": "\"temp for debugging\" (str)",
+        "exception": "None (NoneType)"
+      },
+      "note": "正常系。デバッグ用の固定文字列を完全一致で返す。インスタンスの状態は変更されない。"
+    },
+    "2": {
+      "input": {
+        "self": "None (NoneType)"
+      },
+      "output": {
+        "return_value": "\"temp for debugging\" (str)",
+        "exception": "None (NoneType)"
+      },
+      "note": "境界値・型違い。クラス経由の非束縛呼び出しでselfにNoneを渡す。selfを参照しないため、例外なく固定文字列を返す。"
+    },
+    "3": {
+      "input": {
+        "self": "42 (int)"
+      },
+      "output": {
+        "return_value": "\"temp for debugging\" (str)",
+        "exception": "None (NoneType)"
+      },
+      "note": "型違い。クラス経由の非束縛呼び出しでselfに整数を渡す。型検証も属性参照もないため、固定文字列を返す。"
+    },
+    "4": {
+      "input": {},
+      "output": {
+        "exception": "TypeError",
+        "return_value": "No return value; invocation fails"
+      },
+      "note": "異常系。クラス経由の非束縛呼び出しで必須引数selfを省略する。Pythonの引数束縛でTypeErrorとなり、関数本体は実行されない。"
+    },
+    "5": {
+      "input": {
+        "self": "TempModule2 instance (同じインスタンスで run を3回連続で呼び出す)"
+      },
+      "output": {
+        "return_value": "3回とも \"temp for debugging\" (str)"
+      },
+      "note": "IT5追加ケース。同じインスタンスで run を3回連続で呼び出しても、毎回同じ固定文字列を返すことを確認する。"
+    }
+  },
+  "additional_possible_patterns": {}
+}
