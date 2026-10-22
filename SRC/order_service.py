@@ -1,3 +1,6 @@
+"""Order service used for DocifyCode unit test generation tests."""
+
+
 class OrderService:
     def calculate_total(self, prices, tax_rate):
         if not prices:
