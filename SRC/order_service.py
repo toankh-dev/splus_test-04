@@ -5,6 +5,8 @@ class OrderService:
     def calculate_total(self, prices, tax_rate):
         if not prices:
             return 0
+        if tax_rate < 0:
+            raise ValueError("tax_rate must not be negative")
         subtotal = sum(prices)
         return round(subtotal * (1 + tax_rate), 2)
 
