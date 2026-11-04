@@ -1,0 +1,323 @@
+{
+  "io_patterns": {
+    "input": {
+      "source": [
+        "prices=[1200.0, 850.5]（Pythonのlist[float]）、tax_rate=0.1（Pythonのfloat）",
+        "prices=[]（Pythonの空list）、tax_rate=0.1（Pythonのfloat）",
+        "prices=[]（Pythonの空list）、tax_rate=-0.1（Pythonのfloat。空リストでは税率を検証しない）",
+        "prices=[]（Pythonの空list）、tax_rate=\"invalid\"（Pythonのstr。空リストでは税率を使用しない）",
+        "prices=[100]（Pythonのlist[int]）、tax_rate=0.0（Pythonのfloat）",
+        "prices=[100]（Pythonのlist[int]）、tax_rate=0.1（Pythonのfloat）",
+        "prices=[100]（Pythonのlist[int]）、tax_rate=1.0（Pythonのfloat。上限の指定なし）",
+        "prices=[100]（Pythonのlist[int]）、tax_rate=-0.01（Pythonのfloat）",
+        "prices=[0, 0.0]（Pythonのlist[int | float]）、tax_rate=0.1（Pythonのfloat）",
+        "prices=[-10.0, 20.0]（Pythonのlist[float]。価格の非負制約は設計に記載なし）、tax_rate=0.1（Pythonのfloat）",
+        "prices=[2.675]（Pythonのlist[float]）、tax_rate=0.0（Pythonのfloat。Pythonのroundによる丸めを確認）",
+        "prices=None（PythonのNoneType）、tax_rate=0.1（Pythonのfloat。pricesの型不一致）",
+        "prices=100（Pythonのint。pricesの型不一致）、tax_rate=0.1（Pythonのfloat）",
+        "prices=[\"100\"]（Pythonのlist[str]。要素の型不一致）、tax_rate=0.1（Pythonのfloat）",
+        "prices=[100]（Pythonのlist[int]）、tax_rate=\"0.1\"（Pythonのstr。tax_rateの型不一致）",
+        "prices=[100]（Pythonのlist[int]）、tax_rate=None（PythonのNoneType。tax_rateの型不一致）",
+        "prices=[100]（Pythonのlist[int]）、tax_rate=True（Pythonのbool。Pythonではboolはintのサブクラス）",
+        "prices=[100]（Pythonのlist[int]）を位置引数、tax_rate=0.1（Pythonのfloat）をキーワード引数としてfunctools.partialで事前適用した関数の呼出し"
+      ],
+      "flg": [
+        "pricesが空かどうか：空（税率の検証および計算を行わず、整数の0を返す）",
+        "pricesが空かどうか：空でない（価格合計と税率を使って計算する）",
+        "tax_rateが0未満かどうか：0未満（pricesが空でない場合はValueError）",
+        "tax_rateが0かどうか：0（税抜価格合計を小数第2位まで丸める）",
+        "tax_rateが正かどうか：正（税率を加算して計算する）",
+        "tax_rateが1を超えるかどうか：1を超えない（設計上、上限の制約なし）",
+        "入力型が設計どおりかどうか：型不一致（PythonではTypeErrorなどの発生を確認）"
+      ],
+      "method": {}
+    },
+    "output": {
+      "return_values": [
+        "2255.55（Pythonのfloat。prices=[1200.0, 850.5]、tax_rate=0.1の場合）",
+        "0（Pythonのint。pricesが空の場合。tax_rateが負または不正な型でも税率を検証しない）",
+        "100.0（Pythonのfloat。prices=[100]、tax_rate=0.0の場合）",
+        "110.0（Pythonのfloat。prices=[100]、tax_rate=0.1の場合。部分適用した関数の呼出しも同じ結果）",
+        "200.0（Pythonのfloat。prices=[100]、tax_rate=1.0の場合）",
+        "0.0（Pythonのfloat。価格合計が0の場合）",
+        "11.0（Pythonのfloat。prices=[-10.0, 20.0]、tax_rate=0.1の場合）",
+        "2.67（Pythonのfloat。prices=[2.675]、tax_rate=0.0の場合。Pythonのroundの結果）",
+        "202.0（Pythonのfloat。prices=[100]、tax_rate=Trueの場合。boolが数値として扱われる場合）"
+      ],
+      "exception": [
+        "ValueError（pricesが空でなく、tax_rateが0未満の場合）",
+        "TypeError（pricesがNoneや数値など、反復できない型の場合）",
+        "TypeError（prices内の要素が数値ではなく、合計計算できない場合）",
+        "TypeError（pricesが空でなく、tax_rateが文字列やNoneなど、数値計算できない型の場合）"
+      ]
+    }
+  },
+  "possible_patterns": {
+    "1": {
+      "input": {
+        "prices": "[1200.0, 850.5] (Python list[float])",
+        "tax_rate": "0.1 (Python float)"
+      },
+      "output": {
+        "return_values": "2255.55 (Python float)",
+        "exception": "None"
+      },
+      "note": "通常の価格合計に10%の税率を加算する正常系。"
+    },
+    "2": {
+      "input": {
+        "prices": "[] (Python list)",
+        "tax_rate": "0.1 (Python float)"
+      },
+      "output": {
+        "return_values": "0 (Python int)",
+        "exception": "None"
+      },
+      "note": "空リストでは税率を計算せず、整数の0を返す。"
+    },
+    "3": {
+      "input": {
+        "prices": "[] (Python list)",
+        "tax_rate": "-0.1 (Python float)"
+      },
+      "output": {
+        "return_values": "0 (Python int)",
+        "exception": "None"
+      },
+      "note": "空リストでは負の税率も検証されず、整数の0を返す。"
+    },
+    "4": {
+      "input": {
+        "prices": "[] (Python list)",
+        "tax_rate": "\"invalid\" (Python str)"
+      },
+      "output": {
+        "return_values": "0 (Python int)",
+        "exception": "None"
+      },
+      "note": "空リストでは税率を使用しないため、税率の型が不正でも整数の0を返す。"
+    },
+    "5": {
+      "input": {
+        "prices": "[100] (Python list[int])",
+        "tax_rate": "0.0 (Python float)"
+      },
+      "output": {
+        "return_values": "100.0 (Python float)",
+        "exception": "None"
+      },
+      "note": "税率0の境界値。税抜合計を小数第2位まで丸めて返す。"
+    },
+    "6": {
+      "input": {
+        "prices": "[100] (Python list[int])",
+        "tax_rate": "0.1 (Python float)"
+      },
+      "output": {
+        "return_values": "110.0 (Python float)",
+        "exception": "None"
+      },
+      "note": "整数価格と正の税率を使った正常系。"
+    },
+    "7": {
+      "input": {
+        "prices": "[100] (Python list[int])",
+        "tax_rate": "1.0 (Python float)"
+      },
+      "output": {
+        "return_values": "200.0 (Python float)",
+        "exception": "None"
+      },
+      "note": "税率1.0で計算する。税率に上限の制約はない。"
+    },
+    "8": {
+      "input": {
+        "prices": "[100] (Python list[int])",
+        "tax_rate": "1.5 (Python float)"
+      },
+      "output": {
+        "return_values": "250.0 (Python float)",
+        "exception": "None"
+      },
+      "note": "1を超える税率も有効として計算する。"
+    },
+    "9": {
+      "input": {
+        "prices": "[100] (Python list[int])",
+        "tax_rate": "-0.01 (Python float)"
+      },
+      "output": {
+        "return_values": "None",
+        "exception": "ValueError"
+      },
+      "note": "空でない価格リストに負の税率を指定するとValueError。"
+    },
+    "10": {
+      "input": {
+        "prices": "[0, 0.0] (Python list[int | float])",
+        "tax_rate": "0.1 (Python float)"
+      },
+      "output": {
+        "return_values": "0.0 (Python float)",
+        "exception": "None"
+      },
+      "note": "価格合計が0の場合も正常に計算する。"
+    },
+    "11": {
+      "input": {
+        "prices": "[-10.0, 20.0] (Python list[float])",
+        "tax_rate": "0.1 (Python float)"
+      },
+      "output": {
+        "return_values": "11.0 (Python float)",
+        "exception": "None"
+      },
+      "note": "価格の非負制約は設計にないため、負の価格を含めて合計する。"
+    },
+    "12": {
+      "input": {
+        "prices": "[2.675] (Python list[float])",
+        "tax_rate": "0.0 (Python float)"
+      },
+      "output": {
+        "return_values": "2.67 (Python float)",
+        "exception": "None"
+      },
+      "note": "Pythonのroundによる浮動小数点数の丸め結果を確認する。"
+    },
+    "13": {
+      "input": {
+        "prices": "None (Python NoneType)",
+        "tax_rate": "0.1 (Python float)"
+      },
+      "output": {
+        "return_values": "None",
+        "exception": "TypeError"
+      },
+      "note": "pricesが反復不能なNoneの場合はTypeError。"
+    },
+    "14": {
+      "input": {
+        "prices": "100 (Python int)",
+        "tax_rate": "0.1 (Python float)"
+      },
+      "output": {
+        "return_values": "None",
+        "exception": "TypeError"
+      },
+      "note": "pricesが反復不能な数値の場合はTypeError。"
+    },
+    "15": {
+      "input": {
+        "prices": "[\"100\"] (Python list[str])",
+        "tax_rate": "0.1 (Python float)"
+      },
+      "output": {
+        "return_values": "None",
+        "exception": "TypeError"
+      },
+      "note": "価格リストの要素が数値でなく、合計を計算できない場合はTypeError。"
+    },
+    "16": {
+      "input": {
+        "prices": "[100] (Python list[int])",
+        "tax_rate": "\"0.1\" (Python str)"
+      },
+      "output": {
+        "return_values": "None",
+        "exception": "TypeError"
+      },
+      "note": "空でないpricesに数値計算できない税率を指定するとTypeError。"
+    },
+    "17": {
+      "input": {
+        "prices": "[100] (Python list[int])",
+        "tax_rate": "None (Python NoneType)"
+      },
+      "output": {
+        "return_values": "None",
+        "exception": "TypeError"
+      },
+      "note": "空でないpricesにNoneの税率を指定するとTypeError。"
+    },
+    "18": {
+      "input": {
+        "prices": "[100] (Python list[int])",
+        "tax_rate": "True (Python bool)"
+      },
+      "output": {
+        "return_values": "200 (Python int)",
+        "exception": "None"
+      },
+      "note": "Pythonではboolはintのサブクラスであり、Trueは1として計算される。"
+    },
+    "19": {
+      "input": {
+        "prices": "[100] (Python list[int], 位置引数として部分適用)",
+        "tax_rate": "0.1 (Python float, キーワード引数として部分適用)"
+      },
+      "output": {
+        "return_values": "110.0 (Python float)",
+        "exception": "None"
+      },
+      "note": "pricesを位置引数、tax_rateをキーワード引数としてfunctools.partialで事前適用した関数を引数なしで呼び出す。"
+    }
+  },
+  "additional_possible_patterns": {
+    "20": {
+      "input": {
+        "prices": "(100,) (Python tuple[int]; iterable sequence accepted at runtime)",
+        "tax_rate": "0.1 (Python float)"
+      },
+      "output": {
+        "return_values": "110.0 (Python float)",
+        "exception": "None"
+      },
+      "note": "型注釈はlistだが、実行時に型検証がない場合は数値を含むtupleも反復可能な入力として計算できることを確認する。"
+    },
+    "21": {
+      "input": {
+        "prices": "[] (Python list)",
+        "tax_rate": "None (Python NoneType)"
+      },
+      "output": {
+        "return_values": "0 (Python int)",
+        "exception": "None"
+      },
+      "note": "空リストでは税率を検証・使用しないため、Noneの税率でも整数の0を返すことを確認する。"
+    },
+    "22": {
+      "input": {
+        "prices": "[1.125] (Python list[float])",
+        "tax_rate": "0.0 (Python float)"
+      },
+      "output": {
+        "return_values": "1.12 (Python float)",
+        "exception": "None"
+      },
+      "note": "Pythonのroundによる小数第2位への丸めで、ちょうど中間の値が偶数側に丸められるケースを確認する。"
+    },
+    "23": {
+      "input": {
+        "prices": "[100] (Python list[int])",
+        "tax_rate": "-0.0 (Python float)"
+      },
+      "output": {
+        "return_values": "100.0 (Python float)",
+        "exception": "None"
+      },
+      "note": "負のゼロは0未満ではないため、ValueErrorにならず税率0として計算されることを確認する。"
+    },
+    "24": {
+      "input": {
+        "prices": "[1.125] (Python list[float]; functools.partialに位置引数として渡す値)",
+        "tax_rate": "0.0 (Python float; functools.partialにキーワード引数として渡す値)"
+      },
+      "output": {
+        "return_values": "1.12 (Python float)",
+        "exception": "None"
+      },
+      "note": "pricesを位置引数、tax_rateをキーワード引数としてfunctools.partialで事前適用した新しい関数を呼び出し、丸め結果を確認する。"
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "io_patterns": {
+    "input": {
+      "source": [
+        "引数なしでインスタンスのrun()を呼び出す（正常な呼び出し。selfはPythonが渡す）",
+        "インスタンスのrun()を位置引数付きで呼び出す（予期しない追加引数）",
+        "インスタンスのrun()をキーワード引数付きで呼び出す（予期しない追加引数）",
+        "インスタンスを渡さずクラスのrun()を呼び出す（selfが不足）",
+        "異なるインスタンスで呼び出す、または同一インスタンスで繰り返し呼び出す（状態によらないことの確認）"
+      ],
+      "flg": [],
+      "method": {}
+    },
+    "output": {
+      "return_values": [
+        "\"temp for debugging\"（Pythonのstr。正常な呼び出しでは常にこの固定文字列）"
+      ],
+      "exception": [
+        "TypeError（予期しない位置引数またはキーワード引数を渡した場合、あるいはselfを渡さず呼び出した場合。Pythonの引数束縛時に発生）"
+      ]
+    }
+  },
+  "possible_patterns": {
+    "1": {
+      "input": {
+        "呼び出し形式": "インスタンス.run()を引数なしで呼び出す"
+      },
+      "output": {
+        "return_values": "\"temp for debugging\"（str）",
+        "exception": "なし"
+      },
+      "note": "正常系。固定文字列を返すことを確認する。"
+    },
+    "2": {
+      "input": {
+        "呼び出し形式": "インスタンス.run(1)のように位置引数を1つ渡す"
+      },
+      "output": {
+        "return_values": "なし",
+        "exception": "TypeError"
+      },
+      "note": "定義されていない位置引数を渡した場合、引数束縛時にTypeErrorとなる。"
+    },
+    "3": {
+      "input": {
+        "呼び出し形式": "インスタンス.run(value=1)のようにキーワード引数を渡す"
+      },
+      "output": {
+        "return_values": "なし",
+        "exception": "TypeError"
+      },
+      "note": "定義されていないキーワード引数を渡した場合、引数束縛時にTypeErrorとなる。"
+    },
+    "4": {
+      "input": {
+        "呼び出し形式": "TempModule2.run()のようにselfを渡さずクラスから呼び出す"
+      },
+      "output": {
+        "return_values": "なし",
+        "exception": "TypeError"
+      },
+      "note": "selfが不足しているため、引数束縛時にTypeErrorとなる。"
+    },
+    "5": {
+      "input": {
+        "呼び出し形式": "異なる2つのインスタンスでそれぞれrun()を呼び出す"
+      },
+      "output": {
+        "return_values": "\"temp for debugging\"（各呼び出しでstr）",
+        "exception": "なし"
+      },
+      "note": "インスタンスの違いにかかわらず固定文字列を返すことを確認する。"
+    },
+    "6": {
+      "input": {
+        "呼び出し形式": "同一インスタンスでrun()を繰り返し呼び出す"
+      },
+      "output": {
+        "return_values": "\"temp for debugging\"（各呼び出しでstr）",
+        "exception": "なし"
+      },
+      "note": "呼び出し回数や過去の呼び出し状態に依存しないことを確認する。"
+    },
+    "7": {
+      "input": {
+        "呼び出し形式": "TempModule2.run(None)のようにselfとしてNoneを渡す"
+      },
+      "output": {
+        "return_values": "\"temp for debugging\"（str）",
+        "exception": "なし"
+      },
+      "note": "selfの属性や状態を参照しないため、Noneを渡しても固定文字列を返す。"
+    }
+  },
+  "additional_possible_patterns": {
+    "8": {
+      "input": {
+        "呼び出し形式": "functools.partial(TempModule2.run, self=None)で部分適用した関数を作成し、その関数を引数なしで呼び出す"
+      },
+      "output": {
+        "return_values": "\"temp for debugging\"（Pythonのstr）",
+        "exception": "なし"
+      },
+      "note": "selfをキーワード引数として部分適用した関数でも、固定文字列を返すことを確認する。"
+    }
+  }
+}

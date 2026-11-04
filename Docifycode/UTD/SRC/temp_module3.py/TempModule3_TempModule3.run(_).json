@@ -1,0 +1,73 @@
+{
+  "io_patterns": {
+    "input": {
+      "source": [
+        "引数なし（selfのみ。TempModule3のインスタンスからinstance.run()として呼び出す）",
+        "想定外の位置引数を1つ渡す（PythonではTypeErrorが想定される）",
+        "想定外のキーワード引数を1つ渡す（PythonではTypeErrorが想定される）"
+      ],
+      "flg": [],
+      "method": {}
+    },
+    "output": {
+      "return_values": [
+        "\"temp for mock test\"（Pythonのstr。引数やインスタンス状態に関係なく、呼び出すたびに返す）"
+      ],
+      "exception": [
+        "TypeError（想定外の位置引数またはキーワード引数を渡した場合。Pythonのメソッド呼び出し時に発生）"
+      ]
+    }
+  },
+  "possible_patterns": {
+    "1": {
+      "input": {},
+      "output": {
+        "return_values": "\"temp for mock test\"（Pythonのstr）",
+        "exception": "なし"
+      },
+      "note": "引数なしで呼び出す正常系。固定文字列が返ることを確認する。"
+    },
+    "2": {
+      "input": {
+        "呼び出し回数": "同じインスタンスで2回"
+      },
+      "output": {
+        "return_values": "各呼び出しで\"temp for mock test\"（Pythonのstr）",
+        "exception": "なし"
+      },
+      "note": "呼び出しごとに同じ固定文字列が返り、インスタンス状態に依存しないことを確認する。"
+    },
+    "3": {
+      "input": {
+        "追加位置引数": "1（Pythonのint）"
+      },
+      "output": {
+        "return_values": "なし",
+        "exception": "TypeError"
+      },
+      "note": "想定外の位置引数を渡すと、メソッド呼び出し時にTypeErrorが発生することを確認する。"
+    },
+    "4": {
+      "input": {
+        "追加キーワード引数": "value=1（valueは想定外のキーワード、1はPythonのint）"
+      },
+      "output": {
+        "return_values": "なし",
+        "exception": "TypeError"
+      },
+      "note": "想定外のキーワード引数を渡すと、メソッド呼び出し時にTypeErrorが発生することを確認する。"
+    }
+  },
+  "additional_possible_patterns": {
+    "1": {
+      "input": {
+        "部分適用した関数": "functools.partial(instance.run, 1, value=1)を作成し、引数なしで呼び出す"
+      },
+      "output": {
+        "return_values": "なし",
+        "exception": "TypeError"
+      },
+      "note": "functools.partialで想定外の位置引数とキーワード引数を束縛した関数を呼び出すと、runの引数チェックによりTypeErrorが発生することを確認する。"
+    }
+  }
+}

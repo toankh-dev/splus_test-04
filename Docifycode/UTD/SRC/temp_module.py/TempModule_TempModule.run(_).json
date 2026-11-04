@@ -1,0 +1,58 @@
+{
+  "io_patterns": {
+    "input": {
+      "source": [
+        "引数なしでinstance.run()を呼び出す（run(self)は明示的な入力パラメータを受け取らない）",
+        "位置引数を1つ渡す（例: intの1。未対応の呼び出し）",
+        "キーワード引数を1つ渡す（例: x=\"value\"。未対応の呼び出し）"
+      ],
+      "flg": [],
+      "method": {}
+    },
+    "output": {
+      "return_values": [
+        "\"temp for testing\"（Python str。呼び出すたびに同じ値）"
+      ],
+      "exception": [
+        "TypeError（引数なしのメソッドに余分な位置引数またはキーワード引数を渡した場合）"
+      ]
+    }
+  },
+  "possible_patterns": {
+    "1": {
+      "input": {},
+      "output": {
+        "return_values": "\"temp for testing\"（Python str）",
+        "exception": "なし"
+      },
+      "note": "引数なしで呼び出す正常系。固定文字列を返すことを確認する。"
+    },
+    "2": {
+      "input": {},
+      "output": {
+        "return_values": "1回目・2回目ともに \"temp for testing\"（Python str）",
+        "exception": "なし"
+      },
+      "note": "同じインスタンスで続けて呼び出しても、毎回同じ固定文字列を返すことを確認する。"
+    },
+    "3": {
+      "input": {
+        "位置引数": "1（Python int）"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "未対応の位置引数を渡した場合、TypeErrorが発生することを確認する。"
+    },
+    "4": {
+      "input": {
+        "キーワード引数": "x=\"value\"（Python str）"
+      },
+      "output": {
+        "exception": "TypeError"
+      },
+      "note": "未対応のキーワード引数を渡した場合、TypeErrorが発生することを確認する。"
+    }
+  },
+  "additional_possible_patterns": {}
+}
