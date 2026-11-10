@@ -6,7 +6,7 @@ class OrderService:
         if not prices:
             return 0
         if tax_rate < 0:
-            raise ValueError("tax_rate must be zero or positive")
+            raise ValueError("tax_rate must not be negative")
         subtotal = sum(prices)
         return round(subtotal * (1 + tax_rate), 2)
 
